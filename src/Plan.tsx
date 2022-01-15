@@ -6,7 +6,7 @@ const Plan = () => {
       <AuthButton />
       Plan
     </div>
-  )
-}
+  );
+};
 
 export default Plan;

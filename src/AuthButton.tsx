@@ -1,13 +1,8 @@
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth0 } from "@auth0/auth0-react";
 
 function AuthButton() {
-  const {
-    isLoading,
-    isAuthenticated,
-    error,
-    loginWithRedirect,
-    logout,
-  } = useAuth0();
+  const { isLoading, isAuthenticated, error, loginWithRedirect, logout } =
+    useAuth0();
 
   if (isLoading) {
     return <div>Loading...</div>;

@@ -1,10 +1,12 @@
-import React from 'react';
-import { Router, Switch } from 'react-router-dom';
-import { AppState, Auth0Provider } from '@auth0/auth0-react';
-import { createBrowserHistory } from 'history';
-import Follow from './Follow';
-import Plan from './Plan';
-import ProtectedRoute from './ProtectedRoute'
+import React from "react";
+import { Router, Switch } from "react-router-dom";
+import { AppState, Auth0Provider } from "@auth0/auth0-react";
+import { createBrowserHistory } from "history";
+import Follow from "./Follow";
+import Plan from "./Plan";
+import { ApolloProvider } from "@apollo/client";
+import ProtectedRoute from "./ProtectedRoute";
+import { client } from "./graph/apollo-client";
 
 export const history = createBrowserHistory();
 
@@ -18,17 +20,19 @@ export default function App() {
 
   return (
     <Auth0Provider
-        domain={domain || ""}
-        clientId={clientId || ""}
-        redirectUri={window.location.origin}
-        onRedirectCallback={onRedirectCallback}
-      >
-      <Router history={history}>
-        <Switch>
-          <ProtectedRoute path="/" exact component={Plan}/>
-          <ProtectedRoute path="/follow/:id" component={Follow} />
-        </Switch>
-      </Router>
+      domain={domain || ""}
+      clientId={clientId || ""}
+      redirectUri={window.location.origin}
+      onRedirectCallback={onRedirectCallback}
+    >
+      <ApolloProvider client={client}>
+        <Router history={history}>
+          <Switch>
+            <ProtectedRoute path="/" exact component={Plan} />
+            <ProtectedRoute path="/follow/:id" component={Follow} />
+          </Switch>
+        </Router>
+      </ApolloProvider>
     </Auth0Provider>
   );
 }
