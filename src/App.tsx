@@ -2,8 +2,8 @@ import React from "react";
 import { Router, Switch } from "react-router-dom";
 import { AppState, Auth0Provider } from "@auth0/auth0-react";
 import { createBrowserHistory } from "history";
-import Follow from "./Follow";
-import Plan from "./Plan";
+import FollowPage from "./pages/FollowPage";
+import Plan from "./pages/PlanPage";
 import { ApolloProvider } from "@apollo/client";
 import ProtectedRoute from "./ProtectedRoute";
 import { client } from "./graph/apollo-client";
@@ -29,7 +29,7 @@ export default function App() {
         <Router history={history}>
           <Switch>
             <ProtectedRoute path="/" exact component={Plan} />
-            <ProtectedRoute path="/follow/:id" component={Follow} />
+            <ProtectedRoute path="/follow/:id" component={FollowPage} />
           </Switch>
         </Router>
       </ApolloProvider>
