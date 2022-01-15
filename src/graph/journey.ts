@@ -44,7 +44,7 @@ export const JOURNEY = gql`
 `;
 
 export const CREATE_JOURNEY = gql`
-  mutation CreateJourney($userID: UUID!) {
+  mutation CreateJourney($userID: ID!) {
     createJourney(input: { userId: $userID }) {
       id
       user {

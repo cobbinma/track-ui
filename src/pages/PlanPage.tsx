@@ -2,6 +2,7 @@ import { useMutation } from "@apollo/client";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
 import AuthButton from "../components/AuthButton";
+import Share from "../components/Share";
 import Follow from "../components/Follow";
 import {
   CreateJourney,
@@ -17,15 +18,13 @@ const PlanPage = () => {
     return <div>Loading ...</div>;
   }
 
-  console.log(user);
-
   return (
     <div>
       <AuthButton />
       {journeyId ? (
         <div>
           <Follow id={journeyId} />
-          journey id: {journeyId}
+          <Share journeyId={journeyId} />
         </div>
       ) : (
         <div>
@@ -66,7 +65,10 @@ const CreateJourneyButton: React.FC<CreateJourneyProps> = ({
             .then((result) => {
               setJourneyId(result.data?.createJourney.id || null);
             })
-            .catch((e) => console.log(e));
+            .catch((e) => {
+              console.log("could not create journey");
+              console.log(e);
+            });
         }}
       >
         create journey
