@@ -1,15 +1,19 @@
+import React from "react";
+import { RouteComponentProps } from "react-router-dom";
 import AuthButton from "../components/AuthButton";
 import Follow from "../components/Follow";
 
-const FollowPage = () => {
-  const getLastItem = (thePath: string) =>
-    thePath.substring(thePath.lastIndexOf("/") + 1);
-  const id = getLastItem(window.location.pathname);
+interface MatchParams {
+  id: string;
+}
 
+interface FollowPageProps extends RouteComponentProps<MatchParams> {}
+
+const FollowPage: React.FC<FollowPageProps> = ({ match }) => {
   return (
     <div>
       <AuthButton />
-      <Follow id={id} />
+      <Follow id={match.params.id} />
     </div>
   );
 };
