@@ -111,9 +111,8 @@ const CreateJourneyButton: React.FC<CreateJourneyProps> = ({
   setJourneyStatus,
   userId,
 }) => {
-  const [createJourney, { loading }] = useMutation<
-    CreateJourney
-  >(CREATE_JOURNEY);
+  const [createJourney, { loading }] =
+    useMutation<CreateJourney>(CREATE_JOURNEY);
 
   if (loading) return <div>Submitting...</div>;
 
