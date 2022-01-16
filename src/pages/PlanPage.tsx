@@ -6,7 +6,6 @@ import Share from "../components/Share";
 import Follow from "../components/Follow";
 import {
   CreateJourney,
-  CreateJourneyVars,
   CREATE_JOURNEY,
   JourneyStatus,
   UpdateJourneyStatus,
@@ -113,8 +112,7 @@ const CreateJourneyButton: React.FC<CreateJourneyProps> = ({
   userId,
 }) => {
   const [createJourney, { loading }] = useMutation<
-    CreateJourney,
-    CreateJourneyVars
+    CreateJourney
   >(CREATE_JOURNEY);
 
   if (loading) return <div>Submitting...</div>;

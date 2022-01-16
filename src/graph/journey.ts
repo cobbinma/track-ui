@@ -27,10 +27,6 @@ export type CreateJourney = {
   createJourney: Journey;
 };
 
-export interface CreateJourneyVars {
-  userID: string;
-}
-
 export const JOURNEY = gql`
   subscription Journey($journeyID: UUID!) {
     journey(id: $journeyID) {
@@ -44,8 +40,8 @@ export const JOURNEY = gql`
 `;
 
 export const CREATE_JOURNEY = gql`
-  mutation CreateJourney($userID: ID!) {
-    createJourney(input: { userId: $userID }) {
+  mutation CreateJourney {
+    createJourney {
       id
       user {
         id
