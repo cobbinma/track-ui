@@ -3,10 +3,9 @@ import { Router, Switch } from "react-router-dom";
 import { AppState, Auth0Provider } from "@auth0/auth0-react";
 import { createBrowserHistory } from "history";
 import FollowPage from "./pages/FollowPage";
-import Plan from "./pages/PlanPage";
-import { ApolloProvider } from "@apollo/client";
+import AuthorizedApolloProvider from "./graph/AuthorizedApolloProvider";
 import ProtectedRoute from "./ProtectedRoute";
-import { client } from "./graph/apollo-client";
+import PlanPage from "./pages/PlanPage";
 
 export const history = createBrowserHistory();
 
@@ -17,6 +16,7 @@ const onRedirectCallback = (appState: AppState) => {
 export default function App() {
   const domain = process.env.REACT_APP_AUTH0_DOMAIN;
   const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
+  const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
   return (
     <Auth0Provider
@@ -24,15 +24,16 @@ export default function App() {
       clientId={clientId || ""}
       redirectUri={window.location.origin}
       onRedirectCallback={onRedirectCallback}
+      audience={audience}
     >
-      <ApolloProvider client={client}>
+      <AuthorizedApolloProvider>
         <Router history={history}>
           <Switch>
-            <ProtectedRoute path="/" exact component={Plan} />
+            <ProtectedRoute path="/" exact component={PlanPage} />
             <ProtectedRoute path="/follow/:id" component={FollowPage} />
           </Switch>
         </Router>
-      </ApolloProvider>
+      </AuthorizedApolloProvider>
     </Auth0Provider>
   );
 }
