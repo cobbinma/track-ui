@@ -18,11 +18,6 @@ const PlanPage = () => {
   const [journeyStatus, setJourneyStatus] = useState<JourneyStatus | null>(
     null
   );
-  const { user, isLoading } = useAuth0();
-
-  if (isLoading) {
-    return <div>Loading ...</div>;
-  }
 
   return (
     <div>
@@ -42,7 +37,6 @@ const PlanPage = () => {
           <CreateJourneyButton
             setJourneyId={setJourneyId}
             setJourneyStatus={setJourneyStatus}
-            userId={user?.sub || ""}
           />
         </div>
       )}
@@ -103,13 +97,11 @@ const UpdateJourneyStatusButton: React.FC<UpdateJourneyStatusButtonProps> = ({
 interface CreateJourneyProps {
   setJourneyId: React.Dispatch<React.SetStateAction<string | null>>;
   setJourneyStatus: React.Dispatch<React.SetStateAction<JourneyStatus | null>>;
-  userId: string;
 }
 
 const CreateJourneyButton: React.FC<CreateJourneyProps> = ({
   setJourneyId,
   setJourneyStatus,
-  userId,
 }) => {
   const [createJourney, { loading }] =
     useMutation<CreateJourney>(CREATE_JOURNEY);
@@ -120,7 +112,7 @@ const CreateJourneyButton: React.FC<CreateJourneyProps> = ({
     <div>
       <button
         onClick={() => {
-          createJourney({ variables: { userID: userId } })
+          createJourney()
             .then((result) => {
               setJourneyId(result.data?.createJourney.id || null);
               setJourneyStatus(result.data?.createJourney.status || null);
