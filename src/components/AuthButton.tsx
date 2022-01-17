@@ -1,4 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
+import { Button } from "@mui/material";
 
 function AuthButton() {
   const { isLoading, isAuthenticated, error, loginWithRedirect, logout } =
@@ -15,9 +16,12 @@ function AuthButton() {
   if (isAuthenticated) {
     return (
       <div>
-        <button onClick={() => logout({ returnTo: window.location.origin })}>
+        <Button
+          variant="contained"
+          onClick={() => logout({ returnTo: window.location.origin })}
+        >
           Log out
-        </button>
+        </Button>
       </div>
     );
   } else {

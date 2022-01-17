@@ -14,6 +14,7 @@ import {
   UPDATE_JOURNEY_POSITION,
   UPDATE_JOURNEY_STATUS,
 } from "../graph/journey";
+import { Button } from "@mui/material";
 
 const PlanPage = () => {
   const [journeyId, setJourneyId] = useState<string | null>(null);
@@ -71,7 +72,8 @@ const UpdateJourneyStatusButton: React.FC<UpdateJourneyStatusButtonProps> = ({
 
   return (
     <div>
-      <button
+      <Button
+        variant="contained"
         onClick={() => {
           updateJourneyStatus({
             variables: {
@@ -93,7 +95,7 @@ const UpdateJourneyStatusButton: React.FC<UpdateJourneyStatusButtonProps> = ({
         {status === JourneyStatus.Active
           ? "Complete Jouney"
           : "Continue Journey"}
-      </button>
+      </Button>
     </div>
   );
 };
@@ -114,7 +116,8 @@ const CreateJourneyButton: React.FC<CreateJourneyProps> = ({
 
   return (
     <div>
-      <button
+      <Button
+        variant="contained"
         onClick={() => {
           createJourney()
             .then((result) => {
@@ -125,7 +128,7 @@ const CreateJourneyButton: React.FC<CreateJourneyProps> = ({
         }}
       >
         Create Journey
-      </button>
+      </Button>
     </div>
   );
 };

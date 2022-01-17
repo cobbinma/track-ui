@@ -1,5 +1,12 @@
 import { useSubscription } from "@apollo/client";
-import { JOURNEY, SubscribeJourney, JourneyVars } from "../graph/journey";
+import { Chip } from "@mui/material";
+import {
+  JOURNEY,
+  SubscribeJourney,
+  JourneyVars,
+  JourneyStatus,
+} from "../graph/journey";
+import Map from "./Map";
 
 interface FollowProps {
   id: string;
@@ -15,8 +22,21 @@ const Follow: React.FC<FollowProps> = ({ id }) => {
 
   return (
     <div>
-      {loading ? "Loading..." : "Status:" + data?.journey.status}
-      position: {data?.journey.position?.lat}, {data?.journey.position?.lat}
+      {loading ? (
+        "Loading..."
+      ) : (
+        <Chip
+          label={data?.journey.status}
+          color={
+            data?.journey.status === JourneyStatus.Active
+              ? "warning"
+              : "success"
+          }
+        />
+      )}
+      {data?.journey.position ? (
+        <Map lat={data.journey.position.lat} lng={data.journey.position.lng} />
+      ) : null}
     </div>
   );
 };
