@@ -1,6 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { useAuth0 } from "@auth0/auth0-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AuthButton from "../components/AuthButton";
 import Share from "../components/Share";
 import Follow from "../components/Follow";
@@ -8,8 +7,11 @@ import {
   CreateJourney,
   CREATE_JOURNEY,
   JourneyStatus,
+  UpdateJourneyPosition,
+  UpdateJourneyPositionVars,
   UpdateJourneyStatus,
   UpdateJourneyStatusVars,
+  UPDATE_JOURNEY_POSITION,
   UPDATE_JOURNEY_STATUS,
 } from "../graph/journey";
 
@@ -31,6 +33,9 @@ const PlanPage = () => {
             setJourneyStatus={setJourneyStatus}
             status={journeyStatus}
           />
+          {journeyStatus === JourneyStatus.Active ? (
+            <JourneyPositionUpdater journeyId={journeyId} />
+          ) : null}
         </div>
       ) : (
         <div>
@@ -80,10 +85,9 @@ const UpdateJourneyStatusButton: React.FC<UpdateJourneyStatusButtonProps> = ({
             .then((result) => {
               setJourneyStatus(result.data?.updateJourneyStatus.status || null);
             })
-            .catch((e) => {
-              console.log("could not update journey status");
-              console.log(e);
-            });
+            .catch((e) =>
+              console.log(`could not update journey status : ${e}`)
+            );
         }}
       >
         {status === JourneyStatus.Active
@@ -117,14 +121,65 @@ const CreateJourneyButton: React.FC<CreateJourneyProps> = ({
               setJourneyId(result.data?.createJourney.id || null);
               setJourneyStatus(result.data?.createJourney.status || null);
             })
-            .catch((e) => {
-              console.log("could not create journey");
-              console.log(e);
-            });
+            .catch((e) => console.log(`could not create journey : ${e}`));
         }}
       >
         Create Journey
       </button>
     </div>
   );
+};
+
+interface JourneyPositionUpdaterProps {
+  journeyId: string;
+}
+
+const JourneyPositionUpdater: React.FC<JourneyPositionUpdaterProps> = ({
+  journeyId,
+}) => {
+  let watchId = 0;
+
+  const [updateJourneyPosition] = useMutation<
+    UpdateJourneyPosition,
+    UpdateJourneyPositionVars
+  >(UPDATE_JOURNEY_POSITION);
+
+  useEffect(() => {
+    return () => {
+      navigator.geolocation.clearWatch(watchId);
+    };
+  }, [watchId]);
+
+  const updateLocation = (position: GeolocationPosition): void => {
+    console.log(
+      "New position at: " +
+        position.coords.latitude +
+        ", " +
+        position.coords.longitude
+    );
+    updateJourneyPosition({
+      variables: {
+        input: {
+          id: journeyId,
+          position: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          },
+        },
+      },
+    }).catch((e) => console.log(`could not update journey position : ${e}`));
+  };
+
+  if (navigator.geolocation) {
+    watchId = navigator.geolocation.watchPosition(
+      updateLocation,
+      (e: GeolocationPositionError): void => {
+        console.log(`unable to watch position : ${e}`);
+      }
+    );
+  } else {
+    console.log("geolocation is not supported by this browser");
+  }
+
+  return null;
 };

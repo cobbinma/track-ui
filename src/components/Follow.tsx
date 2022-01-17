@@ -13,7 +13,12 @@ const Follow: React.FC<FollowProps> = ({ id }) => {
 
   if (error) return <div>`Error! ${error.message}`</div>;
 
-  return <div>{loading ? "Loading..." : "Status:" + data?.journey.status}</div>;
+  return (
+    <div>
+      {loading ? "Loading..." : "Status:" + data?.journey.status}
+      position: {data?.journey.position?.lat}, {data?.journey.position?.lat}
+    </div>
+  );
 };
 
 export default Follow;
