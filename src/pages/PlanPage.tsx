@@ -28,14 +28,16 @@ const PlanPage = () => {
       {journeyId && journeyStatus ? (
         <div>
           <Follow id={journeyId} />
-          <Share journeyId={journeyId} />
           <UpdateJourneyStatusButton
             journeyId={journeyId}
             setJourneyStatus={setJourneyStatus}
             status={journeyStatus}
           />
           {journeyStatus === JourneyStatus.Active ? (
-            <JourneyPositionUpdater journeyId={journeyId} />
+            <div>
+              <Share journeyId={journeyId} />
+              <JourneyPositionUpdater journeyId={journeyId} />
+            </div>
           ) : null}
         </div>
       ) : (
