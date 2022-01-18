@@ -1,5 +1,5 @@
 import { useSubscription } from "@apollo/client";
-import { Chip } from "@mui/material";
+import { Chip, CircularProgress } from "@mui/material";
 import {
   JOURNEY,
   SubscribeJourney,
@@ -23,7 +23,7 @@ const Follow: React.FC<FollowProps> = ({ id }) => {
   return (
     <div>
       {loading ? (
-        "Loading..."
+        <CircularProgress />
       ) : (
         <Chip
           label={data?.journey.status}

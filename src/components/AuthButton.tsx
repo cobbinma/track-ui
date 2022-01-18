@@ -1,12 +1,16 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 
 function AuthButton() {
   const { isLoading, isAuthenticated, error, loginWithRedirect, logout } =
     useAuth0();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <CircularProgress />
+      </div>
+    );
   }
 
   if (error) {

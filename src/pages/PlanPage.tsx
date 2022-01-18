@@ -14,7 +14,7 @@ import {
   UPDATE_JOURNEY_POSITION,
   UPDATE_JOURNEY_STATUS,
 } from "../graph/journey";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 
 const PlanPage = () => {
   const [journeyId, setJourneyId] = useState<string | null>(null);
@@ -70,7 +70,12 @@ const UpdateJourneyStatusButton: React.FC<UpdateJourneyStatusButtonProps> = ({
     UpdateJourneyStatusVars
   >(UPDATE_JOURNEY_STATUS);
 
-  if (loading) return <div>Submitting...</div>;
+  if (loading)
+    return (
+      <div>
+        <CircularProgress />
+      </div>
+    );
 
   return (
     <div>
@@ -114,7 +119,12 @@ const CreateJourneyButton: React.FC<CreateJourneyProps> = ({
   const [createJourney, { loading }] =
     useMutation<CreateJourney>(CREATE_JOURNEY);
 
-  if (loading) return <div>Submitting...</div>;
+  if (loading)
+    return (
+      <div>
+        <CircularProgress />
+      </div>
+    );
 
   return (
     <div>
