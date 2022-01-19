@@ -18,19 +18,22 @@ const AuthorizedApolloProvider: React.FC<{ children: React.ReactNode }> = ({
   const { getAccessTokenSilently } = useAuth0();
 
   const httpLink = createHttpLink({
-    uri: "http://localhost:8080/query",
+    uri: `${process.env.REACT_APP_TRACK_API_HTTP}/query`,
   });
 
   const wsLink = new WebSocketLink(
-    new SubscriptionClient(`ws://localhost:8080/subscriptions`, {
-      reconnect: true,
-      connectionParams: async () => {
-        const token = await getAccessTokenSilently();
-        return {
-          Authorization: `Bearer ${token}`,
-        };
-      },
-    })
+    new SubscriptionClient(
+      `${process.env.REACT_APP_TRACK_API_WS}/subscriptions`,
+      {
+        reconnect: true,
+        connectionParams: async () => {
+          const token = await getAccessTokenSilently();
+          return {
+            Authorization: `Bearer ${token}`,
+          };
+        },
+      }
+    )
   );
 
   const authLink = setContext(async () => {
