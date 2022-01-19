@@ -16,10 +16,14 @@ import {
 } from "../graph/journey";
 import { Button, CircularProgress } from "@mui/material";
 
+const LocalStorageKey = "journeyKey";
+
 const PlanPage = () => {
-  const [journeyId, setJourneyId] = useState<string | null>(null);
+  const [journeyId, setJourneyId] = useState<string | null>(
+    localStorage.getItem(LocalStorageKey)
+  );
   const [journeyStatus, setJourneyStatus] = useState<JourneyStatus | null>(
-    null
+    journeyId ? JourneyStatus.Active : null
   );
 
   return (
@@ -92,7 +96,10 @@ const UpdateJourneyStatusButton: React.FC<UpdateJourneyStatusButtonProps> = ({
             },
           })
             .then((result) => {
-              setJourneyStatus(result.data?.updateJourneyStatus.status || null);
+              const status = result.data?.updateJourneyStatus.status;
+              if (status) setJourneyStatus(status);
+              if (status === JourneyStatus.Active)
+                localStorage.removeItem(LocalStorageKey);
             })
             .catch((e) =>
               console.log(`could not update journey status : ${e}`)
@@ -133,8 +140,13 @@ const CreateJourneyButton: React.FC<CreateJourneyProps> = ({
         onClick={() => {
           createJourney()
             .then((result) => {
-              setJourneyId(result.data?.createJourney.id || null);
-              setJourneyStatus(result.data?.createJourney.status || null);
+              const id = result.data?.createJourney.id;
+              const status = result.data?.createJourney.status;
+              if (id) {
+                setJourneyId(id);
+                localStorage.setItem(LocalStorageKey, id);
+              }
+              if (status) setJourneyStatus(status);
             })
             .catch((e) => console.log(`could not create journey : ${e}`));
         }}
