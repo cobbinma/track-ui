@@ -26,6 +26,7 @@ const AuthorizedApolloProvider: React.FC<{ children: React.ReactNode }> = ({
       `${process.env.REACT_APP_TRACK_API_WS}/subscriptions`,
       {
         reconnect: true,
+        timeout: 30000,
         connectionParams: async () => {
           const token = await getAccessTokenSilently();
           return {
