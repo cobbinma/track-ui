@@ -98,7 +98,7 @@ const UpdateJourneyStatusButton: React.FC<UpdateJourneyStatusButtonProps> = ({
             .then((result) => {
               const status = result.data?.updateJourneyStatus.status;
               if (status) setJourneyStatus(status);
-              if (status === JourneyStatus.Active)
+              if (status === JourneyStatus.Complete)
                 localStorage.removeItem(LocalStorageKey);
             })
             .catch((e) =>
@@ -178,12 +178,6 @@ const JourneyPositionUpdater: React.FC<JourneyPositionUpdaterProps> = ({
   }, [watchId]);
 
   const updateLocation = (position: GeolocationPosition): void => {
-    console.log(
-      "New position at: " +
-        position.coords.latitude +
-        ", " +
-        position.coords.longitude
-    );
     updateJourneyPosition({
       variables: {
         input: {
