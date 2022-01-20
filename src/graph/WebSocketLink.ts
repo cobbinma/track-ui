@@ -23,10 +23,22 @@ export class WebSocketLink extends ApolloLink {
           next: sink.next.bind(sink),
           complete: sink.complete.bind(sink),
           error: (err) => {
-            console.log(err);
-            return err;
+            if (Array.isArray(err))
+              // GraphQLError[]
+              return sink.error(
+                new Error(err.map(({ message }) => message).join(', ')),
+              );
+
+            if (err instanceof CloseEvent)
+              return sink.error(
+                new Error(
+                  `Socket closed with event ${err.code} ${err.reason || ''}`, // reason will be available on clean closes only
+                ),
+              );
+
+            return sink.error(err);
           },
-        }
+        },
       );
     });
   }
