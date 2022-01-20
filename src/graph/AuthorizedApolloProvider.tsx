@@ -8,9 +8,8 @@ import {
 import { getMainDefinition } from "@apollo/client/utilities";
 import { setContext } from "@apollo/link-context";
 import { useAuth0 } from "@auth0/auth0-react";
-import { WebSocketLink } from "@apollo/client/link/ws";
+import { WebSocketLink } from "./WebSocketLink";
 import React from "react";
-import { SubscriptionClient } from "subscriptions-transport-ws";
 
 const AuthorizedApolloProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -21,21 +20,15 @@ const AuthorizedApolloProvider: React.FC<{ children: React.ReactNode }> = ({
     uri: `${process.env.REACT_APP_TRACK_API_HTTP}/query`,
   });
 
-  const wsLink = new WebSocketLink(
-    new SubscriptionClient(
-      `${process.env.REACT_APP_TRACK_API_WS}/subscriptions`,
-      {
-        reconnect: true,
-        timeout: 30000,
-        connectionParams: async () => {
-          const token = await getAccessTokenSilently();
-          return {
-            Authorization: `Bearer ${token}`,
-          };
-        },
-      }
-    )
-  );
+  const wsLink = new WebSocketLink({
+    url: `${process.env.REACT_APP_TRACK_API_WS}/subscriptions`,
+    connectionParams: async () => {
+      const token = await getAccessTokenSilently();
+      return {
+        Authorization: `Bearer ${token}`,
+      };
+    },
+  });
 
   const authLink = setContext(async () => {
     const token = await getAccessTokenSilently();
@@ -61,7 +54,6 @@ const AuthorizedApolloProvider: React.FC<{ children: React.ReactNode }> = ({
   const apolloClient = new ApolloClient({
     link: link,
     cache: new InMemoryCache(),
-    connectToDevTools: true,
   });
 
   return <ApolloProvider client={apolloClient}>{children}</ApolloProvider>;
