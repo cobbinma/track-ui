@@ -32,14 +32,14 @@ const PlanPage = () => {
       {journeyId && journeyStatus ? (
         <div>
           <Follow id={journeyId} />
-          <UpdateJourneyStatusButton
-            journeyId={journeyId}
-            setJourneyStatus={setJourneyStatus}
-            status={journeyStatus}
-          />
           {journeyStatus === JourneyStatus.Active ? (
             <div>
               <Share journeyId={journeyId} />
+              <UpdateJourneyStatusButton
+                journeyId={journeyId}
+                setJourneyStatus={setJourneyStatus}
+                status={journeyStatus}
+              />
               <JourneyPositionUpdater journeyId={journeyId} />
             </div>
           ) : null}
@@ -164,43 +164,40 @@ interface JourneyPositionUpdaterProps {
 const JourneyPositionUpdater: React.FC<JourneyPositionUpdaterProps> = ({
   journeyId,
 }) => {
-  let watchId = 0;
-
   const [updateJourneyPosition] = useMutation<
     UpdateJourneyPosition,
     UpdateJourneyPositionVars
   >(UPDATE_JOURNEY_POSITION);
 
   useEffect(() => {
-    return () => {
-      navigator.geolocation.clearWatch(watchId);
-    };
-  }, [watchId]);
-
-  const updateLocation = (position: GeolocationPosition): void => {
-    updateJourneyPosition({
-      variables: {
-        input: {
-          id: journeyId,
-          position: {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
+    let watchId: number | null = null;
+    const updateLocation = (position: GeolocationPosition) => {
+      updateJourneyPosition({
+        variables: {
+          input: {
+            id: journeyId,
+            position: {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            },
           },
         },
-      },
-    }).catch((e) => console.log(`could not update journey position : ${e}`));
-  };
-
-  if (navigator.geolocation) {
-    watchId = navigator.geolocation.watchPosition(
-      updateLocation,
-      (e: GeolocationPositionError): void => {
-        console.log(`unable to watch position : ${e}`);
-      }
-    );
-  } else {
-    console.log("geolocation is not supported by this browser");
-  }
+      }).catch((e) => console.log(`could not update journey position : ${e}`));
+    };
+    if (navigator.geolocation) {
+      watchId = navigator.geolocation.watchPosition(
+        updateLocation,
+        (e: GeolocationPositionError): void => {
+          console.log(`unable to watch position : ${e}`);
+        }
+      );
+    } else {
+      console.log("geolocation is not supported by this browser");
+    }
+    return () => {
+      if (watchId) navigator.geolocation.clearWatch(watchId);
+    };
+  }, [updateJourneyPosition, journeyId]);
 
   return null;
 };
