@@ -1,7 +1,14 @@
 import IosShareIcon from "@mui/icons-material/IosShare";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import QRCode from "qrcode.react";
-import { Box, Button, Modal, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Modal,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 
 const style = {
@@ -26,25 +33,17 @@ const Share: React.FC<ShareProps> = ({ journeyId }) => {
   return (
     <div>
       <Button onClick={() => setShow(true)} variant="contained">
-        <IosShareIcon /> Share
+        <Stack direction="row" spacing={1}>
+          <Typography>Share</Typography>
+          <IosShareIcon />
+        </Stack>
       </Button>
       <Modal open={show} onClose={() => setShow(false)}>
         <Box sx={style}>
-          <TextField
-            id="outlined-basic"
-            label={link}
-            variant="outlined"
-            disabled={true}
-          />
-          <Button
-            onClick={() => {
-              navigator.clipboard.writeText(link);
-            }}
-          >
-            <ContentCopyIcon />
-          </Button>
-          <br />
+        <Stack spacing={2}>
+          <URL link={link} />
           <QRCode value={link} />
+          </Stack>
         </Box>
       </Modal>
     </div>
@@ -52,3 +51,32 @@ const Share: React.FC<ShareProps> = ({ journeyId }) => {
 };
 
 export default Share;
+
+interface URLProps {
+  link: string;
+}
+
+const URL: React.FC<URLProps> = ({ link }) => {
+  const style = {
+    display: "flex",
+    'flex-direction': "row"
+  };
+  return (
+    <div style={style}>
+      <TextField
+        id="outlined-basic"
+        style={{flexGrow: 4}}
+        label={link}
+        variant="outlined"
+        disabled={true}
+      />
+      <Button
+        onClick={() => {
+          navigator.clipboard.writeText(link);
+        }}
+      >
+        <ContentCopyIcon />
+      </Button>
+    </div>
+  );
+};

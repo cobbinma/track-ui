@@ -14,7 +14,7 @@ import {
   UPDATE_JOURNEY_POSITION,
   UPDATE_JOURNEY_STATUS,
 } from "../graph/journey";
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, Container, Stack } from "@mui/material";
 
 const LocalStorageKey = "journeyKey";
 
@@ -28,30 +28,38 @@ const PlanPage = () => {
 
   return (
     <div>
-      <AuthButton />
-      {journeyId && journeyStatus ? (
-        <div>
-          <Follow id={journeyId} />
-          {journeyStatus === JourneyStatus.Active ? (
+      <Container maxWidth="md">
+        <Stack spacing={2}>
+          <AuthButton />
+          {journeyId && journeyStatus ? (
             <div>
-              <Share journeyId={journeyId} />
-              <UpdateJourneyStatusButton
-                journeyId={journeyId}
-                setJourneyStatus={setJourneyStatus}
-                status={journeyStatus}
-              />
-              <JourneyPositionUpdater journeyId={journeyId} />
+              <Stack spacing={2}>
+                <Follow id={journeyId} />
+                {journeyStatus === JourneyStatus.Active ? (
+                  <div>
+                    <Stack direction="row" spacing={1}>
+                      <UpdateJourneyStatusButton
+                        journeyId={journeyId}
+                        setJourneyStatus={setJourneyStatus}
+                        status={journeyStatus}
+                      />
+                      <Share journeyId={journeyId} />
+                    </Stack>
+                    <JourneyPositionUpdater journeyId={journeyId} />
+                  </div>
+                ) : null}
+              </Stack>
             </div>
-          ) : null}
-        </div>
-      ) : (
-        <div>
-          <CreateJourneyButton
-            setJourneyId={setJourneyId}
-            setJourneyStatus={setJourneyStatus}
-          />
-        </div>
-      )}
+          ) : (
+            <div>
+              <CreateJourneyButton
+                setJourneyId={setJourneyId}
+                setJourneyStatus={setJourneyStatus}
+              />
+            </div>
+          )}
+        </Stack>
+      </Container>
     </div>
   );
 };
